@@ -3,6 +3,7 @@ import * as test from "../../../util/test";
 import chalk from "chalk";
 import { log, logSolution } from "../../../util/log";
 import { performance } from "perf_hooks";
+import { parseInt } from "lodash";
 
 const YEAR = 2021;
 const DAY = 2;
@@ -11,8 +12,35 @@ const DAY = 2;
 // data path    : /home/mark/development/personal/aoc2021/years/2021/02/data.txt
 // problem url  : https://adventofcode.com/2021/day/2
 
+const DIRECTIONS = ["forward", "down", "up"];
+
+interface Command {
+	direction: "forward" | "down" | "up",
+	amount: number
+}
+
+function parseInput(input: string): Command[] {
+	const matcher = /^(forward|down|up) (\d+)$/;
+
+	return input.split("\n").map((unparsedCommand: string) => {
+		const result = matcher.exec(unparsedCommand);
+		if (!result) {
+			throw new Error("Could not parse " + unparsedCommand);
+		}
+		if (DIRECTIONS.indexOf(result[1]) !== -1) {
+			return {
+				direction: result[1] as Command["direction"],
+				amount: parseInt(result[2]),
+			};
+
+		}
+		throw new Error("Unrecognized command " + result[1]);
+	});
+}
+
 async function p2021day2_part1(input: string, ...params: any[]) {
-	return "Not implemented";
+	const commands = parseInput(input);
+	return Number.NEGATIVE_INFINITY;
 }
 
 async function p2021day2_part2(input: string, ...params: any[]) {
