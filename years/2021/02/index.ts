@@ -40,16 +40,64 @@ function parseInput(input: string): Command[] {
 
 async function p2021day2_part1(input: string, ...params: any[]) {
 	const commands = parseInput(input);
-	return Number.NEGATIVE_INFINITY;
+	const state = { horizontal: 0, depth: 0 };
+	commands.forEach((command) => {
+		if (command.direction === "forward") {
+			state.horizontal += command.amount;
+		} else if (command.direction === "down") {
+			state.depth += command.amount;
+		} else if (command.direction === "up") {
+			state.depth -= command.amount;
+		} else {
+			throw new Error("Unhandled command " + command.direction);
+		}
+	});
+
+	return state.horizontal * state.depth;
 }
 
 async function p2021day2_part2(input: string, ...params: any[]) {
-	return "Not implemented";
+	const commands = parseInput(input);
+	const state = { horizontal: 0, depth: 0, aim: 0 };
+	commands.forEach((command) => {
+		if (command.direction === "forward") {
+			state.horizontal += command.amount;
+			state.depth += (state.aim * command.amount);
+		} else if (command.direction === "down") {
+			state.aim += command.amount;
+		} else if (command.direction === "up") {
+			state.aim -= command.amount;
+		} else {
+			throw new Error("Unhandled command " + command.direction);
+		}
+	});
+
+	return state.horizontal * state.depth;
 }
 
 async function run() {
-	const part1tests: TestCase[] = [];
-	const part2tests: TestCase[] = [];
+	const part1tests: TestCase[] = [
+		{
+			input: `forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2`,
+			expected: "150",
+		},
+	];
+	const part2tests: TestCase[] = [
+		{
+			input: `forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2`,
+			expected: "900",
+		},
+	];
 
 	// Run tests
 	test.beginTests();
